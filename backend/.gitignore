@@ -1,0 +1,6 @@
+venv/
+hirehub/.env
+__pycache__/
+*.pyc
+hirehub/db.sqlite3
+media/
