@@ -1,4 +1,3 @@
-# accounts/admin.py
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import User
@@ -6,12 +5,18 @@ from .models import User
 
 @admin.register(User)
 class CustomUserAdmin(UserAdmin):
-    # Add our custom fields to the admin panel
-    list_display = ['username', 'email', 'role', 'is_active']
-    list_filter = ['role', 'is_active']
-    search_fields = ['username', 'email']
+    """
+    Extends Django's built-in UserAdmin to show our custom fields.
+    """
+    list_display = ["email", "username", "role", "is_active", "date_joined"]
+    list_filter = ["role", "is_active", "is_staff"]
+    search_fields = ["email", "username", "first_name", "last_name"]
+    ordering = ["-date_joined"]
 
-    # Add role/bio to the edit form
+    # Add 'role' to the detail view fieldsets
     fieldsets = UserAdmin.fieldsets + (
-        ('HireHub Fields', {'fields': ('role', 'avatar', 'bio', 'phone')}),
+        ("HireHub", {"fields": ("role", "avatar")}),
+    )
+    add_fieldsets = UserAdmin.add_fieldsets + (
+        ("HireHub", {"fields": ("role",)}),
     )
