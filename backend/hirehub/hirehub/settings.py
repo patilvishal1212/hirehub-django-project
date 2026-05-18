@@ -6,8 +6,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Security ---------------------------------------------------
 SECRET_KEY = config('SECRET_KEY')
-Debug= config('DEBUG', cast=bool)
-ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+DEBUG = config('DEBUG', default=False, cast=bool)
+ALLOWED_HOSTS = config(
+    "ALLOWED_HOSTS",
+    default="127.0.0.1,localhost"
+).split(",")
 
 
 # Application definition
@@ -32,6 +35,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -114,6 +118,10 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
 # ─── DJANGO REST FRAMEWORK ───────────────────────────────────────────────────
 REST_FRAMEWORK = {
     # Use JWT for all endpoints by default
@@ -162,10 +170,17 @@ CORS_ALLOW_CREDENTIALS = True
 #                  Use "None" in production if frontend/backend on different domains
 #                  (requires Secure=True when SameSite=None)
 REFRESH_TOKEN_COOKIE = {
-    "key": "hirehub_refresh",          # Cookie name visible in browser DevTools
-    "httponly": True,                   # ← The critical security flag
-    "secure": config("COOKIE_SECURE", default=False, cast=bool),
-    "samesite": config("COOKIE_SAMESITE", default="Lax"),
+    "key": "hirehub_refresh",
+    "httponly": True,
+    "secure": True,
+    "samesite": "None",
     "max_age": 60 * 60 * 24 * config("REFRESH_TOKEN_LIFETIME_DAYS", default=7, cast=int),
-    "path": "/api/auth/",              # Cookie only sent to auth endpoints (least privilege)
+    "path": "/api/auth/",
 }
+
+CSRF_TRUSTED_ORIGINS = config(
+    "CSRF_TRUSTED_ORIGINS",
+    default=""
+).split(",")
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

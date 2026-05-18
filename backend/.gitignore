@@ -4,3 +4,10 @@ __pycache__/
 *.pyc
 hirehub/db.sqlite3
 media/
+
+venv/
+.env
+__pycache__/
+db.sqlite3
+media/
+staticfiles/

@@ -13,13 +13,10 @@ import CreateJob from "./pages/subpages/CreateJob";
 import DashboardLayout from "./components/DashboardLayout";
 import ProtectedRoute from "./components/ProtecyedRoute";
 import CreateCompany from "./pages/subpages/CreateCompany";
+import Home from "./pages/Home";
 
 // Placeholder pages
-const Home = () => (
-  <div className="min-h-screen bg-slate-950 flex items-center justify-center">
-    <p className="text-slate-400">Home — Phase 2</p>
-  </div>
-);
+
 
 const App = () => {
   return (
